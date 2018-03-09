@@ -21,7 +21,8 @@ FROM osha_inspection
 LIMIT 100
 ;
 
-/* Do we have duplicates we should be watching out for? Let's find out with DISTINCT. Note: This may take several minutes to run on
+/* Do we have duplicates we should be watching out for? Let's find out with DISTINCT. 
+Note: This may take several minutes to run on
 a table this large.  */
 
 SELECT DISTINCT * 
@@ -172,7 +173,7 @@ GROUP BY 1
 
 /* Looks like tens of thousands of inspections have been flagged as being associated with an accident. */
 
-/* To find out more about the accidents, we'll have to bring in and join up data from a table that's just about accidents. 
+/* To find out more about the accidents, we'll have to bring in and join up data from a table that's just about accidents. */
 
 /* The accident table has a lot of really interesting detail, like the event description. 
 If we start digging into particular accidents, we're going to want this field. 
@@ -251,7 +252,10 @@ There's a third table, the accident_injury table, that connects them. So let's g
 
 /* OK, now before we go any further, we need to make sure our three tables are well-indexed. 
 
-Let's make sure all 3 of our tables have primary keys and also have indexes on the fields we're going to be joining on. Let's add the primary key fields, which MySQL will automatically populate with AUTO_INCREMENT. The datatype for these is MEDIUMINT (medium integer). There's also TINYINT for small datasets and BIGINT for ... guess what ... big data sets. */
+Let's make sure all 3 of our tables have primary keys and also have indexes on the fields we're going to be joining on. 
+Let's add the primary key fields, which MySQL will automatically populate with AUTO_INCREMENT. 
+The datatype for these is MEDIUMINT (medium integer). There's also TINYINT for small datasets and BIGINT for 
+... guess what ... big data sets. */
 
 ALTER TABLE osha_inspection
 ADD COLUMN jp_id_num MEDIUMINT AUTO_INCREMENT PRIMARY KEY
@@ -267,7 +271,7 @@ ADD COLUMN jp_id_num MEDIUMINT AUTO_INCREMENT PRIMARY KEY
 
 /* Next, let's create some indexes on the fields we'll be using in our joins. */
 
-CREATE INDEX activity_nr ON osha_inspection_1500_records (activity_nr)
+CREATE INDEX activity_nr ON osha_inspection (activity_nr)
 ;
 
 CREATE INDEX rel_insp_nr ON osha_accident_injury (osha_accident_injury)
@@ -284,7 +288,7 @@ CREATE INDEX summary_nr ON osha_accident (summary_nr)
 to give a table a one-letter nickname (an alias)! */
 
 SELECT COUNT(*) AS count_of_matched_records_in_join
-FROM osha_inspection_1500_records a
+FROM osha_inspection a
 JOIN osha_accident_injury b
 ON a.activity_nr = b.rel_insp_nr
 
@@ -292,11 +296,13 @@ ON a.activity_nr = b.rel_insp_nr
 we know those tables are supposed to join on that field, and it wouldn't make sense for there to be 
 not a single match. */ 
 
-/* Also, for every inspection that was flagged with the accident indicator, there should be at least one record in accident_injury. Is that true?
-Let's find out. This query looks for any records that DO have the accident flag but DON'T have a matching record in accident_injury: */
+/* Also, for every inspection that was flagged with the accident indicator, 
+there should be at least one record in accident_injury. Is that true?
+Let's find out. This query looks for any records that DO have the accident flag but 
+DON'T have a matching record in accident_injury: */
 
 SELECT a.*
-FROM osha_inspection_1500_records a
+FROM osha_inspection a
 LEFT JOIN osha_accident_injury b
 ON a.activity_nr = b.rel_insp_nr
 WHERE b.rel_insp_nr IS NULL AND a.osha_accident_indicator = 't'
@@ -305,7 +311,7 @@ WHERE b.rel_insp_nr IS NULL AND a.osha_accident_indicator = 't'
 /* So, that looks good. So let's try marrying all three tables together. */
 
 SELECT COUNT(*) AS our_count
-FROM osha_inspection_1500_records a
+FROM osha_inspection a
 JOIN osha_accident_injury b
 ON a.activity_nr = b.rel_insp_nr
 JOIN osha_accident c
@@ -313,11 +319,13 @@ ON b.summary_nr = c.summary_nr
 ;
 
 /* Let's circle back to our COUNT DISTINCT from earlier. 
-You can write a subquery selecting all the DISTINCT records, and then query those results with a COUNT(*). Let's learn about subqueries -- queries inside queries! */
+You can write a subquery selecting all the DISTINCT records, and then query those results with a COUNT(*). 
+Let's learn about subqueries -- queries inside queries! */
 
 SELECT COUNT(*) AS count_of_distinct_records
 FROM (SELECT DISTINCT *
-FROM osha_inspection_1500_records) AS mysubquery -- if you use a subquery in parentheses, you have to give it a name or you'll get an error message. 
+FROM osha_inspection) AS mysubquery /* if you use a subquery in parentheses, 
+you have to give it a name or you'll get an error message. */
 ;
 
 /* You can use a subquery to create a summary number for something and then join that query back to the original table. */ 
