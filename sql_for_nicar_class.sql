@@ -51,6 +51,14 @@ FROM osha_inspection
 WHERE site_state = '' OR site_state IS NULL
 ;
 
+/* What about if there are 'N/A' in our site_state field? Let's count those, too. There aren't any N/As in this data, but
+let's use this as an example to learn how to use IN to filter for multiple criteria at once easily.  */
+
+SELECT *
+FROM osha_inspection
+WHERE site_state IN ('', 'N/A') OR site_state IS NULL
+;
+
 /* So, what date range does our table cover? Did they give us the date range we asked them for? 
 Did they give us a few more months than we asked, or a few less, for some reason? */
 
@@ -162,7 +170,7 @@ FROM osha_inspection
 GROUP BY 1
 ;
 
-/* Looks like 55,279 inspections have been flagged as being associated with an accident. */
+/* Looks like tens of thousands of inspections have been flagged as being associated with an accident. */
 
 /* To find out more about the accidents, we'll have to bring in and join up data from a table that's just about accidents. 
 
@@ -352,7 +360,7 @@ FROM georgia_inspections_only
 /* What if we want to combine some fields or a field and some text and then another field? Use CONCAT! */
 
 SELECT CONCAT('The establishment called ', a.estab_name, 'is at ', a.site_address, ', ', a.site_city, ', ', a.site_state)
-FROM osha_inspection
+FROM osha_inspection a
 ;
 
 /* What if we need to make a crosstab comparing things? Let's compare the numbers of inspections performed in Georgia
@@ -367,6 +375,25 @@ SUM(IF(a.site_state = 'FL', 1,0)) AS inspections_in_Fla
 FROM osha_inspection a
 ;
 
+/* What if we need to create a new field and fill it with something depending on what's in another field, or multiple other fields? 
+Let's use CASE statements. Let's assign counties to some of our Georgia inspections, based on the city name. */
+
+SELECT a.`estab_name`, a.`site_city`, a.site_state,
+CASE WHEN a.site_city = 'Atlanta' THEN 'Fulton'
+WHEN a.site_city = 'Alpharetta' THEN 'Fulton'
+WHEN a.site_city = 'Tifton' THEN 'Tift'
+WHEN a.site_city = 'Norcross' THEN 'Gwinnett'
+WHEN a.site_city = 'Macon' THEN 'Bibb'
+WHEN a.site_city = 'College Park' THEN 'Fulton'
+WHEN a.site_city = 'Duluth' THEN 'Gwinnett'
+WHEN a.site_city = 'Augusta' THEN 'Richmond'
+WHEN a.site_city = 'Savannah' THEN 'Chatham'
+WHEN a.site_city = 'Columbus' THEN 'Muscogee'
+ELSE ''
+END AS county_we_assigned
+FROM osha_inspection a
+WHERE a.site_state = 'GA' 
+;
 
 /* ADDENDUM: BREAKING DOWN HOW TO ACTUALLY LOAD A DATA FILE INTO MYSQL */
 
