@@ -353,6 +353,19 @@ FROM georgia_inspections_only
 
 SELECT CONCAT('The establishment called ', a.estab_name, 'is at ', a.site_address, ', ', a.site_city, ', ', a.site_state)
 FROM osha_inspection
+;
+
+/* What if we need to make a crosstab comparing things? Let's compare the numbers of inspections performed in Georgia
+and the surrounding states. We'll use IF to look in the site_state field and count 1 if it finds that state, and we'll
+wrap our IF clause with SUM to make it add up all the 1's it finds. */
+SELECT SUM(IF(a.site_state = 'GA', 1,0)) AS inspections_in_Georgia,
+SUM(IF(a.site_state = 'AL', 1,0)) AS inspections_in_Alabama,
+SUM(IF(a.site_state = 'SC', 1,0)) AS inspections_in_SC,
+SUM(IF(a.site_state = 'TN', 1,0)) AS inspections_in_Tenn,
+SUM(IF(a.site_state = 'NC', 1,0)) AS inspections_in_NC,
+SUM(IF(a.site_state = 'FL', 1,0)) AS inspections_in_Fla
+FROM osha_inspection a
+;
 
 
 /* ADDENDUM: BREAKING DOWN HOW TO ACTUALLY LOAD A DATA FILE INTO MYSQL */
