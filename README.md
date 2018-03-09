@@ -1,4 +1,4 @@
-# nicar_2018_adv_sql
+# NICAR 2018 advanced SQL
 Advanced SQL for the 2018 NICAR conference in Chicago
 
 Welcome! Let's do some SQL!
