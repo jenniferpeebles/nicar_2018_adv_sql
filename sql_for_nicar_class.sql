@@ -1,5 +1,4 @@
-/* First of all, thank you to Liz Lucas, who has taught this class in previous years, for posting her code here on Github. I have shamelessly
-copied it and tried to add on to it. Liz has the original code and the OSHA data for the class at https://github.com/eklucas/NICAR-Adv-SQL. */
+/* First of all, thank you to Liz Lucas, who has taught this class in previous years, for posting her code here on Github. I have shamelessly copied it and tried to add on to it. Liz has the original code and the OSHA data for the class at https://github.com/eklucas/NICAR-Adv-SQL. */
 
 /* So, let's first make sure all our records loaded and find out how many records are in our table if we don't know already. */
 
