@@ -246,9 +246,13 @@ LIMIT 100
 ;
 
 /* But wait ... Notice that there's no activity_nr field in this data. How will we join the two tables? The answer: 
-There's a third table, the accident_injury table, that connects them. So let's get that in here, too.  */
+There's a third table, the accident_injury table, that connects them.  (If the accident_injury table is not loaded on your computer
+or you need to load it on your computer at home, there is a CREATE TABLE statement for it at the bottom of this file.) */
 
-/* Let's check to make sure all our records loaded in the accident_injury table. */
+SELECT * 
+FROM osha_accident_injury
+LIMIT 100
+;
 
 /* OK, now before we go any further, we need to make sure our three tables are well-indexed. 
 
