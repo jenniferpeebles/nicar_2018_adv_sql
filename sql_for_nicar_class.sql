@@ -378,7 +378,7 @@ FROM osha_inspection a
 /* What if we need to create a new field and fill it with something depending on what's in another field, or multiple other fields? 
 Let's use CASE statements. Let's assign counties to some of our Georgia inspections, based on the city name. */
 
-SELECT a.`estab_name`, a.`site_city`, a.site_state,
+SELECT a.estab_name, a.site_city, a.site_state,
 CASE WHEN a.site_city = 'Atlanta' THEN 'Fulton'
 WHEN a.site_city = 'Alpharetta' THEN 'Fulton'
 WHEN a.site_city = 'Tifton' THEN 'Tift'
